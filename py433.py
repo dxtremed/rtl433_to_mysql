@@ -53,7 +53,7 @@ def startsubprocess(command):
     Example of how to consume standard output and standard error of
     a subprocess asynchronously without risk on deadlocking.
     '''
-    print "\n\nStarting sub process " + command + "\n"
+    print ("\n\nStarting sub process " + command + "\n")
     # Launch the command as subprocess.
 
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
