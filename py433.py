@@ -13,14 +13,12 @@ import mysql.connector
 from mysql.connector import errorcode
 
 config = {
-  'user': 'rtl433db',
-  'password': 'my_password',
-  'host': 'localhost',
-  'database': 'rtl433db',
+  'user': 'xMGTPKuFUF',
+  'password': 'uF5D6o59iz',
+  'host': 'remotemysql.com',
+  'database': 'xMGTPKuFUF',
   'raise_on_warnings': True,
 }
-
-
 
 class AsynchronousFileReader(threading.Thread):
     '''
@@ -49,9 +47,6 @@ def replace(string):
     while '  ' in string:
         string = string.replace('  ', ' ')
     return string
-
-
-
 
 def startsubprocess(command):
     '''
@@ -87,14 +82,12 @@ def startsubprocess(command):
 
     cursor = cnx.cursor()
     TABLES = {}
-    TABLES['SensorData'] = (
-        "CREATE TABLE `SensorData` ("
-        "  `house` TINYINT(1) UNSIGNED NOT NULL,"
-	"  `channel` TINYINT(1) UNSIGNED NOT NULL,"
-	"  `battery` BOOLEAN NOT NULL DEFAULT 0,"
+    TABLES['TempHumData'] = (
+        "CREATE TABLE `TempHumData` ("
+        "  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
+	"  `sensorid` CHAR(2) UNSIGNED NOT NULL,"
         "  `temperature` DECIMAL(5,2) NOT NULL,"
-        "  `humidity` TINYINT(2),"
-        "  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        "  `humidity` DECIMAL(5,2) NOT NULL"
         ") ENGINE =InnoDB DEFAULT CHARSET=latin1")
     for name, ddl in TABLES.iteritems():
         try:
@@ -107,9 +100,9 @@ def startsubprocess(command):
                 print(err.msg)
         else:
             print("OK")
-    add_sensordata= ("INSERT INTO SensorData "
-                     "(house, channel, battery, temperature, humidity) "
-                     "VALUES (%s, %s, %s, %s, %s)")
+    add_sensordata= ("INSERT INTO TempHumData "
+                     "(timestamp, sensorid, temperature, humidity) "
+                     "VALUES (%s, %s, %s, %s)")
 
     # do queue loop, entering data to database
     # Check the queues if we received some output (until there is nothing more to get).
@@ -122,9 +115,9 @@ def startsubprocess(command):
 
             line = replace(stdout_queue.get())
 
-            if ('WT450 sensor:'in line):
-                print '======== WT450 EVENT ========'
-		print "Time : %s" % time.ctime()
+            if ('LaCrosse-TX141THBv2'in line):
+                print '======== LaCrosse EVENT ========'
+		#print "Time : %s" % time.ctime()
 		#Data starts after ": "
 		myData=line.split(': ')
 		#igrone item 0		
@@ -135,16 +128,10 @@ def startsubprocess(command):
                 for myText in myData:
 			print myText
 			myTemp=myText.split(' ')
-                        if 'House'in myText:
-				house=myTemp[2]                        
-			elif 'Channel'in myText:
-                                channel=myTemp[1]
-                        elif 'Battery'in myText:
-                                battery=myTemp[1]
-				if battery=="OK":
-					battery=1
-				else:
-					battery=0
+                        if 'time'in myText:
+				time=myTemp[1]                        
+			elif 'Sensor ID'in myText:
+                                sensorid=myTemp[1]
                         elif 'Temperature'in myText:
                                 temperature=myTemp[1]
                         elif 'Humidity'in myText:
@@ -163,7 +150,7 @@ def startsubprocess(command):
 			print "Error happened during reconnection @ %s" % time.ctime()
 			print(err.msg)
                 try:
-                    sensordata = (house,channel,battery,temperature,humidity)
+                    sensordata = (time,sensorid,temperature,humidity)
                     cursor.execute(add_sensordata,sensordata)
                     # Make sure data is committed to the database
                     cnx.commit()
