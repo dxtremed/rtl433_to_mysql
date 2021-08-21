@@ -116,7 +116,7 @@ def startsubprocess(command):
             line = replace(stdout_queue.get())
 
             if ('LaCrosse-TX141THBv2'in line):
-                print '======== LaCrosse EVENT ========'
+                print ('======== LaCrosse EVENT ========')
 		#print "Time : %s" % time.ctime()
 		#Data starts after ": "
 		myData=line.split(': ')
@@ -126,7 +126,7 @@ def startsubprocess(command):
 		myData=myData.split(', ')
 
                 for myText in myData:
-			print myText
+			print (myText)
 			myTemp=myText.split(' ')
                         if 'time'in myText:
 				time=myTemp[1]                        
@@ -147,7 +147,7 @@ def startsubprocess(command):
 			print("Reconnecting to database")
 			cnx.reconnect()
 		    except mysql.connector.Error as err:
-			print "Error happened during reconnection @ %s" % time.ctime()
+			print ("Error happened during reconnection @ %s" % time.ctime())
 			print(err.msg)
                 try:
                     sensordata = (time,sensorid,temperature,humidity)
@@ -160,7 +160,7 @@ def startsubprocess(command):
 
 		
             else:
-                print "stdout: " + str(line) #Print stuff without processing
+                print ("stdout: " + str(line)) #Print stuff without processing
 
 
 
@@ -168,7 +168,7 @@ def startsubprocess(command):
         while not stderr_queue.empty():
             line = replace(stderr_queue.get())
 
-            print str(line) #Print stuff without processing
+            print (str(line)) #Print stuff without processing
 
 
         # Sleep a bit before asking the readers again.
@@ -204,5 +204,5 @@ if __name__ == '__main__':
     	startsubprocess("./rtl_433")
 	print "sleeping 5 min : %s" % time.ctime()
 	time.sleep(300)
-	print "End : %s" % time.ctime()    	
+	print ("End : %s" % time.ctime() )   	
     print("Closing down")
