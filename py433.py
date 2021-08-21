@@ -120,16 +120,16 @@ def startsubprocess(command):
 		#print "Time : %s" % time.ctime()
 		#Data starts after ": "
 		myData=line.split(': ')
-		#igrone item 0		
+		#igrone item 0
 		myData=myData[1]
-		#split to different types of information, e.g. Temperature, Channel		
+		#split to different types of information, e.g. Temperature, Channel
 		myData=myData.split(', ')
 
                 for myText in myData:
 			print (myText)
 			myTemp=myText.split(' ')
                         if 'time'in myText:
-				time=myTemp[1]                        
+				time=myTemp[1]
 			elif 'Sensor ID'in myText:
                                 sensorid=myTemp[1]
                         elif 'Temperature'in myText:
@@ -204,5 +204,5 @@ if __name__ == '__main__':
     	startsubprocess("./rtl_433")
 	print "sleeping 5 min : %s" % time.ctime()
 	time.sleep(300)
-	print ("End : %s" % time.ctime() )   	
+	print ("End : %s" % time.ctime() )
     print("Closing down")
