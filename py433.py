@@ -13,11 +13,11 @@ import mysql.connector
 from mysql.connector import errorcode
 
 config = {
-  'user': 'xMGTPKuFUF',
-  'password': 'uF5D6o59iz',
-  'host': 'remotemysql.com',
-  'database': 'xMGTPKuFUF',
-  'raise_on_warnings': True,
+    'user': 'xMGTPKuFUF',
+    'password': 'uF5D6o59iz',
+    'host': 'remotemysql.com',
+    'database': 'xMGTPKuFUF',
+    'raise_on_warnings': True,
 }
 
 class AsynchronousFileReader(threading.Thread):
@@ -85,7 +85,7 @@ def startsubprocess(command):
     TABLES['TempHumData'] = (
         "CREATE TABLE `TempHumData` ("
         "  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
-	"  `sensorid` CHAR(2) UNSIGNED NOT NULL,"
+	    "  `sensorid` CHAR(2) UNSIGNED NOT NULL,"
         "  `temperature` DECIMAL(5,2) NOT NULL,"
         "  `humidity` DECIMAL(5,2) NOT NULL"
         ") ENGINE =InnoDB DEFAULT CHARSET=latin1")
@@ -101,8 +101,8 @@ def startsubprocess(command):
         else:
             print("OK")
     add_sensordata= ("INSERT INTO TempHumData "
-                     "(timestamp, sensorid, temperature, humidity) "
-                     "VALUES (%s, %s, %s, %s)")
+        "(timestamp, sensorid, temperature, humidity) "
+        "VALUES (%s, %s, %s, %s)")
 
     # do queue loop, entering data to database
     # Check the queues if we received some output (until there is nothing more to get).
@@ -117,26 +117,26 @@ def startsubprocess(command):
 
             if ('LaCrosse-TX141THBv2'in line):
                 print ('======== LaCrosse EVENT ========')
-		#print "Time : %s" % time.ctime()
-		#Data starts after ": "
-		myData=line.split(': ')
-		#igrone item 0
-		myData=myData[1]
-		#split to different types of information, e.g. Temperature, Channel
-		myData=myData.split(', ')
+		        #print "Time : %s" % time.ctime()
+		        #Data starts after ": "
+		        myData=line.split(': ')
+		        #igrone item 0
+		        myData=myData[1]
+		        #split to different types of information, e.g. Temperature, Channel
+		        myData=myData.split(', ')
 
                 for myText in myData:
-			print (myText)
-			myTemp=myText.split(' ')
+			        print (myText)
+			        myTemp=myText.split(' ')
                         if 'time'in myText:
-				time=myTemp[1]
-			elif 'Sensor ID'in myText:
-                                sensorid=myTemp[1]
+				            time=myTemp[1]
+			            elif 'Sensor ID'in myText:
+                            sensorid=myTemp[1]
                         elif 'Temperature'in myText:
-                                temperature=myTemp[1]
+                            temperature=myTemp[1]
                         elif 'Humidity'in myText:
-                                humidity=myTemp[1]
-		#######################
+                            humidity=myTemp[1]
+		        #######################
                 #last field, put in db
                 # UPDATE DB
                 #########################
